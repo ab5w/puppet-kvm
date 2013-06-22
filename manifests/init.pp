@@ -27,43 +27,75 @@
 
 class kvm {
 
-    exec { 'aptgetupdate':
-        command => '/usr/bin/apt-get update',
-        path => '/usr/bin:/bin:/usr/sbin:/sbin',
-    }
+    if $::osfamily == 'redhat' {
+ 
+        package {'python-virtinst':
+            ensure => installed,
+        }
 
-    package {'qemu-kvm':
-        ensure => installed,
-        require  => Exec['aptgetupdate'],
-    }
+        package {'virt-top':
+            ensure => installed,
+        }
 
+        package {'qemu-kvm':
+            ensure => installed,
+        }
 
-    package {'virt-top':
-        ensure => installed,
-        require  => Exec['aptgetupdate'],
-    }
+        package {'libvirt':
+            ensure => installed,
+        }
 
+        package {'bridge-utils':
+            ensure => installed,
+        }
 
-    package {'libvirt-bin':
-        ensure => installed,
-        require  => Exec['aptgetupdate'],
-    }
+        service { "libvirtd":
+            enable => true,
+            ensure => running,
+        }
 
+    } elsif $::osfamily == 'debian' {
 
-    package {'virtinst':
-        ensure => installed,
-        require  => Exec['aptgetupdate'],
-    }
+        exec { 'aptgetupdate':
+            command => '/usr/bin/apt-get update',
+            path => '/usr/bin:/bin:/usr/sbin:/sbin',
+        }
 
+        package {'qemu-kvm':
+            ensure => installed,
+            require  => Exec['aptgetupdate'],
+        }
 
-    package {'python-libvirt':
-        ensure => installed,
-        require  => Exec['aptgetupdate'],
-    }
+        package {'virt-top':
+            ensure => installed,
+            require  => Exec['aptgetupdate'],
+        }
 
-    service { "libvirt-bin":
-        ensure => "running",
-        enable => true,
-    }
+        package {'libvirt-bin':
+            ensure => installed,
+            require  => Exec['aptgetupdate'],
+        }
+
+        package {'virtinst':
+            ensure => installed,
+            require  => Exec['aptgetupdate'],
+        }
+
+        package {'python-libvirt':
+            ensure => installed,
+            require  => Exec['aptgetupdate'],
+        }
+
+        package {'bridge-utils':
+            ensure => installed,
+            require  => Exec['aptgetupdate'],
+        }
+
+        service { "libvirt-bin":
+            ensure => "running",
+            enable => true,
+        }
+
+    }    
     
 }
