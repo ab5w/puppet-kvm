@@ -49,6 +49,21 @@ class kvm {
             ensure => installed,
         }
 
+        exec { 'yum-group-install-virt':
+            unless  => '/usr/bin/yum grouplist "Virtualization" | /bin/grep "^Virtualization"',
+            command => '/usr/bin/yum -y groupinstall "Virtualization"',
+        }
+
+        exec { 'yum-group-install-virt-plat':
+            unless  => '/usr/bin/yum grouplist "Virtualization Platform" | /bin/grep "^Virtualization Platform"',
+            command => '/usr/bin/yum -y groupinstall "Virtualization Platform"',
+        }
+
+        exec { 'yum-group-install-virt-plat-tools':
+            unless  => '/usr/bin/yum grouplist "Virtualization Tools" | /bin/grep "^Virtualization Tools"',
+            command => '/usr/bin/yum -y groupinstall "Virtualization Tools"',
+        }
+
         service { "libvirtd":
             enable => true,
             ensure => running,
