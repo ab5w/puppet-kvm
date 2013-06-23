@@ -1,4 +1,4 @@
-Simple module to install KVM on Debian.
+Simple module to install KVM on Debian or RHEL.
 
 Include it into your .pp with either; 
 
